@@ -1,0 +1,26 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# App data (user's audio library — never commit media)
+backend/storage/originals/*
+backend/storage/stems/*
+backend/storage/exports/*
+!backend/storage/originals/.gitkeep
+!backend/storage/stems/.gitkeep
+!backend/storage/exports/.gitkeep
+backend/app.db
+
+# Self-signed dev cert (key.pem is a private key — never commit)
+backend/certs/
+
+# Editors / OS
+.vscode/
+.DS_Store
+Thumbs.db

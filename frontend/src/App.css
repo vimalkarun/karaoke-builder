@@ -1,0 +1,783 @@
+.app {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  gap: 16px;
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.app-body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .app-body {
+    grid-template-columns: 1fr;
+  }
+
+  /* Title + action buttons side-by-side gets cramped on a phone-width
+     screen (title wraps, buttons squeeze into a narrow column) — stack
+     them and let the buttons take the full width instead. */
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+  }
+
+  /* flex-basis over 50% forces 2-per-row wrapping (3 buttons: 2 + 1)
+     instead of squeezing all of them into one cramped row. */
+  .header-actions > * {
+    flex: 1 1 45%;
+  }
+
+  /* UploadButton's clickable element is a <label>, which stretches to
+     fill its own wrapper div (above) but is inline-block by default, so
+     it still needs its own width set to actually match the YouTube
+     button's full-width sizing next to it. */
+  .header-actions .upload-button label {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.library-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.player-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  min-height: 320px;
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Library / track list ---------- */
+
+.track-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.track-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.track-row:hover {
+  background: var(--bg-raised);
+}
+
+.track-row.selected {
+  background: var(--accent-soft);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.track-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.track-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-meta {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.status-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--bg-raised);
+  color: var(--text-soft);
+}
+
+.status-separated {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.status-error {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.status-importing,
+.status-separating {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.45;
+  font-size: 0.85rem;
+  color: var(--text);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.icon-button:hover {
+  opacity: 1;
+  background: var(--bg-raised);
+}
+
+@media (max-width: 800px) {
+  /* Bump touch targets closer to the ~44px minimum recommended for
+     reliable tapping — desktop keeps the denser sizing above. */
+  .icon-button {
+    padding: 11px;
+    font-size: 1rem;
+  }
+}
+
+.empty-state {
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  padding: 8px 4px;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin: 6px 0 0;
+}
+
+.success-text {
+  color: var(--success);
+  font-size: 0.85rem;
+  margin: 6px 0 0;
+}
+
+.modal-divider {
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  margin: 20px 0;
+}
+
+/* ---------- Buttons ---------- */
+
+.button {
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled) {
+  background: #262b34;
+  border-color: #454b58;
+}
+
+.button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.button.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.upload-button label {
+  display: inline-block;
+}
+
+@media (max-width: 800px) {
+  /* Bump touch targets closer to the ~44px minimum recommended for
+     reliable tapping — desktop keeps the denser sizing above. Placed
+     after the base .button rule so it wins the cascade at equal
+     specificity. */
+  .button {
+    padding: 11px 16px;
+  }
+}
+
+/* ---------- Player ---------- */
+
+.player h2 {
+  margin: 0 0 4px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.player-artist {
+  margin: 0 0 18px;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+}
+
+.separate-cta {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.separate-options {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.field-inline select {
+  padding: 6px 8px;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+input.seek-bar {
+  flex: 1;
+  --seek-progress: 0%;
+  background: linear-gradient(to right, var(--accent) var(--seek-progress), var(--bg-raised) var(--seek-progress));
+}
+
+.time {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  color: var(--text-faint);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 18px 0;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.field input[type='number'],
+.field input[type='text'] {
+  padding: 8px 10px;
+}
+
+.field select {
+  padding: 8px 10px;
+}
+
+.player-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Range inputs (explicit — native styling is inconsistent
+   and, on some platforms, low-contrast against a dark theme) ---------- */
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--bg-raised);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--accent-text);
+  cursor: pointer;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--accent-text);
+  cursor: pointer;
+}
+
+input[type='range']::-moz-range-track {
+  background: var(--bg-raised);
+  height: 4px;
+  border-radius: 999px;
+}
+
+/* ---------- Modals ---------- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 20px;
+}
+
+.modal {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 400px;
+  max-width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+}
+
+.modal.wide {
+  width: 560px;
+}
+
+.modal h2 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.export-status {
+  margin-top: 16px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.grid-2 > .field {
+  /* Grid items default to min-width: auto, so a number input's intrinsic
+     browser-default width (~170px) can force a column past its 1fr share
+     and overflow the modal on narrow screens — this lets the column
+     actually shrink to the track size instead. */
+  min-width: 0;
+}
+
+/* ---------- Mixer ---------- */
+
+.mixer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.mixer-channel {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mixer-channel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mixer-channel-name {
+  font-weight: 600;
+  font-size: 0.83rem;
+}
+
+.mixer-channel-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.mixer-toggle {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mixer-toggle.active.mute {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
+}
+
+.mixer-toggle.active.solo {
+  background: var(--warn);
+  border-color: var(--warn);
+  color: #1a1a1a;
+}
+
+.mixer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.mixer-row input[type='range'] {
+  flex: 1;
+}
+
+/* ---------- Misc shared bits ---------- */
+
+.callout-inline {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin: 14px 0;
+}
+
+.checkbox-field {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.checkbox-field input {
+  margin-top: 3px;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.checkbox-field.inline {
+  align-items: center;
+}
+
+.checkbox-field.inline input {
+  margin-top: 0;
+}
+
+.waveform-editor {
+  margin: 4px 0 8px;
+}
+
+.waveform-container {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-input);
+}
+
+.waveform-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+/* ---------- Key suggestion ---------- */
+
+.key-suggest {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin: 18px 0;
+  font-size: 0.85rem;
+}
+
+.key-suggest-detected {
+  color: var(--text-soft);
+}
+
+.key-suggest-detected strong {
+  color: var(--text);
+}
+
+/* ---------- Lyrics ---------- */
+
+.lyrics-panel {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.lyrics-panel h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.lyrics-hint {
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  margin: 0 0 14px;
+}
+
+.field textarea {
+  padding: 10px;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.sync-transport {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sync-lines {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.sync-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--text-faint);
+}
+
+.sync-line.done {
+  color: var(--text-soft);
+}
+
+.sync-line.next {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.sync-tap {
+  flex-shrink: 0;
+  width: 48px;
+  font-size: 0.75rem;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-soft);
+  cursor: pointer;
+}
+
+.sync-line.next .sync-tap {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  cursor: pointer;
+}
+
+.sync-tap:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.sync-time-adjust {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.sync-nudge {
+  width: 20px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-soft);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sync-nudge:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.sync-time-input {
+  width: 58px;
+  text-align: center;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  padding: 4px 2px;
+}
+
+.sync-line-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.karaoke-display {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 12px 4px;
+  text-align: center;
+}
+
+.karaoke-display p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.karaoke-active {
+  color: var(--accent-hover);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.karaoke-past {
+  color: var(--text-faint);
+  opacity: 0.6;
+}
+
+.karaoke-future {
+  color: var(--text-soft);
+}
+
+/* ---------- Practice mode ---------- */
+
+.practice-compare {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.practice-track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.practice-track audio {
+  flex: 1;
+  min-width: 220px;
+  height: 32px;
+}

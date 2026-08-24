@@ -1,0 +1,107 @@
+:root {
+  /* Single deliberate dark theme — the app previously had a half-applied
+     light/dark split where :root followed prefers-color-scheme but every
+     custom panel/modal was hardcoded dark, producing a mismatched UI. */
+  color-scheme: dark;
+
+  --bg: #14161b;
+  --bg-panel: #1b1e25;
+  --bg-raised: #20242c;
+  --bg-input: #262b34;
+  --border: #333844;
+  --border-soft: #2a2e37;
+
+  --text: #edeef2;
+  --text-soft: #b7bcc6;
+  --text-faint: #7d8290;
+
+  --accent: #5b8cff;
+  --accent-hover: #6f9aff;
+  --accent-text: #ffffff;
+  --accent-soft: rgba(91, 140, 255, 0.16);
+
+  --danger: #e2645c;
+  --danger-soft: rgba(226, 100, 92, 0.18);
+  --warn: #e0b93c;
+  --warn-soft: rgba(224, 185, 60, 0.18);
+  --success: #4fbf7f;
+  --success-soft: rgba(79, 191, 127, 0.18);
+
+  --radius: 10px;
+  --radius-sm: 7px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--accent-hover);
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Native form controls don't inherit page colors reliably (a plain <select>
+   left unstyled can render invisible text on Windows/Chrome against a dark
+   popup background) — every one gets an explicit color/background/border. */
+input,
+select,
+textarea,
+option {
+  font-family: inherit;
+  color: var(--text);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  accent-color: var(--accent);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-faint);
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}

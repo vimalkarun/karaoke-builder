@@ -1,0 +1,33 @@
+# Core server
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+sqlalchemy==2.0.35
+pydantic==2.9.2
+
+# Audio analysis (DSP, no ML — key/BPM/duration)
+librosa==0.10.2.post1
+soundfile==0.12.1
+
+# Stem separation (heavy — pulls in torch/torchaudio). Install separately if you
+# want to control the torch build (CPU vs CUDA) for your machine:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   pip install demucs
+demucs==4.0.1
+
+# Pitch/tempo bake for export uses the `rubberband` CLI directly via subprocess
+# (see app/services/audio.py) — install it separately and put it on PATH.
+# No Python package needed; `pyrubberband` is unmaintained and fails to build
+# on Python 3.12+ (its setup.py imports the removed stdlib `imp` module).
+
+# YouTube import (Phase 2) — personal-use only, see docs/PLAN.md §5.
+# Deliberately unpinned: yt-dlp ships frequent releases to keep up with
+# YouTube site changes, and an old pinned version reliably breaks within a
+# few months. Run `pip install -U yt-dlp` periodically if imports start
+# failing.
+yt-dlp
+
+# Lyrics transcription fallback (Phase 3, plan §3/§4) — only used when no
+# lyrics text exists anywhere; ships prebuilt wheels (ctranslate2), no C
+# compiler or extra system dependency needed, unlike aeneas.
+faster-whisper
